@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>クレジットカード、保険証、身分証明証、登録してね!!!!!!!!!!!!!!!!!!!!!!!!</h1>
+    <form id="form" action="{% url 'regex:confirm' %}" method="post">
+        {% csrf_token %}
+        {{ regexForm.name.label_tag}}
+        {{ regexForm.name }}
+        <br>
+        {{ regexForm.age.label_tag}}
+        {{ regexForm.age }}
+        <p id="age-error" style="color: red; margin: 0;"></p>
+        {{ regexForm.zip_code.label_tag}}
+        {{ regexForm.zip_code }}
+        <p id="zip-error" style="color: red; margin: 0;"></p>
+        {{ regexForm.cell_phone.label_tag}}
+        {{ regexForm.cell_phone }}
+        <p id="cell-number-error" style="color: red; margin: 0;"></p>
+        <input type="submit" value="Submit" onclick="validateForm(event)">
+    </form>
+
+    <script>
+        function validateForm(event) {
+            var ageInput = document.getElementById('id_age').value;
+            var zipCodeInput = document.getElementById('id_zip_code').value;
+            var cellNumberInput = document.getElementById('id_cell_phone').value; 
+            var ageError = document.getElementById('age-error');
+            var zipCodeError = document.getElementById('zip-error');
+            var cellNumberError = document.getElementById('cell-number-error');
+    
+            // 年齢
+            if (ageInput.length > 3 || isNaN(ageInput)) {
+                ageError.innerText = "年齢は3桁の半角数字で入力してください。";
+                event.preventDefault();
+            } else {
+                ageError.innerText = "";
+            }
+    
+            // 郵便番号
+            if (!/^\d{3}-?\d{4}$/.test(zipCodeInput)) {
+                zipCodeError.innerText = "郵便番号は7桁の半角数字またはハイフンを含む形式で入力してください。";
+                event.preventDefault();
+            } else {
+                zipCodeError.innerText = "";
+            }
+    
+            // 電話番号
+            if (!/^\d{3}-?\d{4}-?\d{4}$/.test(cellNumberInput)) {
+                cellNumberError.innerText = "電話番号は10桁または11桁の半角数字またはハイフンを含む形式で入力してください。";
+                event.preventDefault();
+            } else {
+                cellNumberError.innerText = "";
+            }
+        }
+    </script>
+</body>
+</html>
